@@ -165,7 +165,7 @@ class RegExpPatternDataGenerator implements IPatternDataGenerator
 				switch ($token)
 				{				
 					case '.':
-						if ($next_token != null && (in_array($next_token, array('?', '+', '*')) || $next_token{0} == '{' && strlen($next_token) > 2))
+						if ($next_token != null && (in_array($next_token, array('?', '+', '*')) || ($next_token{0} == '{' && strlen($next_token) > 2)))
 						{
 							$token = "(?:[{$this->whole_set}]$next_token)";
 							++$i;
