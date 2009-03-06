@@ -40,11 +40,12 @@ class RegExpPatternDataGeneratorSampleRunner
 		$this->_patterns[] = 'Tab\tHere';
 		$this->_patterns[] = 'Tab\cIHere'; // control characters
 		$this->_patterns[] = 'Tab\x09Here'; // hexadecimal character codes
+		$this->_patterns[] = 'Tab[\11]Here';
 		
 		$this->_patterns[] = 'C\+\+'; // escaping special characters
 		$this->_patterns[] = '\QC++\E'; // escaping literals
 		
-		$this->_patterns[] = '.+\bword\b'; // word boundries
+		$this->_patterns[] = '.+\bword\b'; // word boundries		
 	}
 	
 	public function RunSamples()

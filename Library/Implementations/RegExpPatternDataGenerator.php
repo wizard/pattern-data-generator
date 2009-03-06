@@ -459,14 +459,14 @@ class RegExpPatternDataGenerator implements IPatternDataGenerator
 			{
 				if ($token{0} == '\\' && $token{1} == 'c')
 				{
-					$token = '\x'.dechex(ord($token{2}) - ord('A') + 1);					
+					$token = '\x'.dechex(ord($token{2}) - ord('A') + 1); // \cX pattern
 				}
 				
 				if ($token{0} == '\\' && $token{1} == 'Q')
 				{
-					$token = substr($token, 2);
+					$token = substr($token, 2); // \Q...$ pattern
 					
-					if (substr($token, -2) == '\E')
+					if (substr($token, -2) == '\E') // \Q...\E pattern
 					{
 						$token = substr($token, 0, -2);
 					}
@@ -477,17 +477,24 @@ class RegExpPatternDataGenerator implements IPatternDataGenerator
 					{
 						if (is_numeric($token{1}))
 						{
-							$token = '${'.$token{1}.'}';
+							if ($in_set_mode)
+							{
+								$token = chr(octdec($token{1})); // \n pattern -- octal character code
+							}
+							else
+							{							
+								$token = '${'.$token{1}.'}'; // \n pattern -- back-reference
+							}
 						}
-						else if ($token{1} == 'n')
+						else if ($token{1} == 'n') // \n character
 						{
 							$token = "\n";
 						}
-						else if ($token{1} == 'r')
+						else if ($token{1} == 'r') // \r character
 						{
 							$token = "\r";
 						}
-						else if ($token{1} == 't')
+						else if ($token{1} == 't') // \t character
 						{
 							$token = "\t";
 						}
@@ -498,29 +505,33 @@ class RegExpPatternDataGenerator implements IPatternDataGenerator
 					}
 					else if (strlen($token) == 3)
 					{
-						if ($token{1} == 'x')
+						if ($token{1} == 'x') // \xH pattern
 						{
 							$token = chr(hexdec($token{2}));
 						}
-						else
+						else if (!$in_set_mode) // \nn pattern -- back-reference
 						{
 							$token = '${'.$token{1}.$token{2}.'}';
 						}
+						else if ($in_set_mode) // \nn pattern -- octal character code
+						{
+							$token = chr(octdec($token{1}.$token{2}));						
+						}
 					}
-					else if (strlen($token) == 4)
+					else if (strlen($token) == 4) // \xHH pattern
 					{
 						$token = chr(hexdec($token{2}.$token{3}));
 					}
 				}
-				else if ($token{0} == '$' && strlen($token) > 1 && strlen($token) < 6)
+				else if (!$in_set_mode && $token{0} == '$' && strlen($token) > 1 && strlen($token) < 6)
 				{
 					if ($token{1} != '{')
 					{
-						if (strlen($token) == 2)
+						if (strlen($token) == 2) // $n pattern
 						{
 							$token = '${'.$token{1}.'}';							
 						}					
-						else if (strlen($token) == 3)
+						else if (strlen($token) == 3) // $nn pattern
 						{
 							$token = '${'.$token{1}.$token{2}.'}';							
 						}
