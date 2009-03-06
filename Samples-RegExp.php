@@ -69,6 +69,8 @@ class RegExpPatternDataGeneratorSampleRunner
 	
 	public function PrintResults()
 	{
+		$allSamplesAreValid = true;
+		
 		reset($this->_results);
 		if (isset($_SERVER['REMOTE_ADDR'])) // sample is running within a web application
 		{
@@ -78,6 +80,8 @@ class RegExpPatternDataGeneratorSampleRunner
 			foreach ($this->_results as $result)
 			{
 				printf($format, ($result['Valid'] ? 'valid' : 'invalid'), htmlspecialchars($result['Data']), htmlspecialchars($result['Pattern']));
+				
+				$allSamplesAreValid = $allSamplesAreValid && $result['Valid'];
 			}
 		}
 		else // sample is running from a terminal
@@ -87,7 +91,18 @@ class RegExpPatternDataGeneratorSampleRunner
 			foreach ($this->_results as $result)
 			{
 				printf($format, ($result['Valid'] ? 'valid' : 'invalid'), $result['Data'], $result['Pattern']);
+				
+				$allSamplesAreValid = $allSamplesAreValid && $result['Valid'];
 			}
+		}
+		
+		if ($allSamplesAreValid)
+		{
+			printf('All samples are reported to be valid');
+		}
+		else
+		{
+			printf('Some samples are reported to be invalid');
 		}
 	}
 }
