@@ -45,7 +45,9 @@ class RegExpPatternDataGeneratorSampleRunner
 		$this->_patterns[] = 'C\+\+'; // escaping special characters
 		$this->_patterns[] = '\QC++\E'; // escaping literals
 		
-		$this->_patterns[] = '.+\bword\b'; // word boundries		
+		$this->_patterns[] = '.+\bword\b'; // word boundries
+		
+		$this->_patterns[] = '<(ns:[a-z]+)( [a-z]+="[a-z]+")?>[\w ]*</\\1>';
 	}
 	
 	public function RunSamples()
@@ -80,7 +82,8 @@ class RegExpPatternDataGeneratorSampleRunner
 			
 			foreach ($this->_results as $result)
 			{
-				printf($format, ($result['Valid'] ? 'valid' : 'invalid'), htmlspecialchars($result['Data']), htmlspecialchars($result['Pattern']));
+				$validity = ($result['Valid'] ? 'valid' : 'invalid');
+				printf($format, $validity, htmlspecialchars($result['Data']), htmlspecialchars($result['Pattern']));
 				
 				$allSamplesAreValid = $allSamplesAreValid && $result['Valid'];
 			}
@@ -91,7 +94,8 @@ class RegExpPatternDataGeneratorSampleRunner
 			
 			foreach ($this->_results as $result)
 			{
-				printf($format, ($result['Valid'] ? 'valid' : 'invalid'), $result['Data'], $result['Pattern']);
+				$validity = ($result['Valid'] ? 'valid' : 'invalid');
+				printf($format, $validity, $result['Data'], $result['Pattern']);
 				
 				$allSamplesAreValid = $allSamplesAreValid && $result['Valid'];
 			}
