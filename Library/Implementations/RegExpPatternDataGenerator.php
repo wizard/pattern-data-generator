@@ -1,6 +1,6 @@
 <?php
 
-class RegExpPatternDataGenerator implements IPatternDataGenerator
+class RegExpPatternDataGenerator implements IPatternDataGenerator, IPatternDataValidator
 {
 	protected $_pattern;
 	
@@ -112,12 +112,12 @@ class RegExpPatternDataGenerator implements IPatternDataGenerator
 		return $this->GenerateData();
 	}
 	
-	public function Validate($Data)
+	public function ValidateData($Data)
 	{
 		return preg_match('/'.str_replace('/', '\/', $this->_pattern).'/', $Data) > 0;
 	}
 	
-	public function ValidateAgainst($Data, $Pattern)
+	public function ValidateDataAgainst($Data, $Pattern)
 	{
 		$this->SetPattern($Pattern);
 		return $this->Validate($Data);

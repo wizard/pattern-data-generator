@@ -1,6 +1,6 @@
 <?php
 
-include('Library/PatternDataGenerator.php');
+include('Library/Core.php');
 
 class RegExpPatternDataGeneratorSampleRunner
 {
@@ -59,7 +59,7 @@ class RegExpPatternDataGeneratorSampleRunner
 		{
 			$this->_generator->SetPattern($pattern);
 			$data = $this->_generator->GenerateData();
-			$matches = $this->_generator->Validate($data);
+			$matches = $this->_generator->ValidateData($data);
 			
 			$this->_results[] = array('Pattern'=>$pattern, 'Data'=>$data, 'Valid'=>$matches);
 		}
